@@ -34,3 +34,28 @@ class FAA(API):
         else:
             data = xml_data
         return data
+
+    def _cycle_delays(self, list_name, key_name):
+        """
+        Internal method to cycle through current delays and stops, and
+        return information about specific ones.
+        """
+        data = self.delays()
+        for delay in data['Delay_type']:
+            if list_name in delay:
+                return delay[list_name][key_name]
+
+    def ground_delays(self):
+        """Returns a list of airports currently experiencing ground delays."""
+        return self._cycle_delays('Ground_Delay_List', 'Ground_Delay')
+
+    def ground_stops(self):
+        """Returns a list of airports currently experiencing ground stops."""
+        return self._cycle_delays('Ground_Stop_List', 'Program')
+
+    def delay_list(self):
+        """
+        Returns a list of all airports experiencing arrival or departure
+        delays.
+        """
+        return self._cycle_delays('Arrival_Departure_Delay_List', 'Delay')

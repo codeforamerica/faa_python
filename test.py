@@ -12,23 +12,6 @@ from faa import faa, FAA
 from test_delays_data import DELAYS
 
 
-class TestDelaysMethod(unittest.TestCase):
-
-    def setUp(self):
-        api.xml2dict = Mock(return_value=DELAYS)
-        faa.urlopen = Mock()
-
-    def test_default_delays_method(self):
-        FAA().delays()
-        expected_url = 'http://www.fly.faa.gov/flyfaa/xmlAirportStatus.jsp'
-        faa.urlopen.assert_called_with(expected_url)
-        self.assertTrue(api.xml2dict.called)
-
-    def test_delays_method_can_return_xml_data(self):
-        FAA().delays(output_format=None)
-        self.assertFalse(api.xml2dict.called)
-
-
 class TestStatusMethod(unittest.TestCase):
 
     def setUp(self):
@@ -57,6 +40,83 @@ class TestStatusMethod(unittest.TestCase):
         expected_url = 'http://services.faa.gov/airport/status/PDX?format=xml'
         api.urlopen.assert_called_with(expected_url)
         self.assertFalse(api.xml2dict.called)
+
+
+class TestDelaysMethod(unittest.TestCase):
+
+    def setUp(self):
+        api.xml2dict = Mock(return_value=DELAYS)
+        faa.urlopen = Mock()
+
+    def test_default_delays_method(self):
+        FAA().delays()
+        expected_url = 'http://www.fly.faa.gov/flyfaa/xmlAirportStatus.jsp'
+        faa.urlopen.assert_called_with(expected_url)
+        self.assertTrue(api.xml2dict.called)
+
+    def test_delays_method_can_return_xml_data(self):
+        FAA().delays(output_format=None)
+        self.assertFalse(api.xml2dict.called)
+
+
+
+
+class TestGroundDelaysMethod(unittest.TestCase):
+
+    def setUp(self):
+        api.xml2dict = Mock(return_value=DELAYS)
+        faa.urlopen = Mock()
+
+    def test_default_ground_delays_method(self):
+        data = FAA().ground_delays()
+        expected = [
+            {'ARPT': 'BOS',
+             'Reason': 'WX / LOW CEILINGS',
+             'Avg': '46 minutes',
+             'Max': '0 minutes'},
+            {'ARPT': 'EWR',
+             'Reason': 'WX / THUNDERSTORMS',
+             'Avg': '47 minutes',
+             'Max': '0 minutes'},
+            {'ARPT': 'JFK',
+             'Reason': 'WEATHER / THUNDERSTORMS',
+             'Avg': '46 minutes',
+             'Max': '0 minutes'},
+            {'ARPT': 'LGA',
+             'Reason': 'WEATHER / THUNDERSTORMS',
+             'Avg': '29 minutes',
+             'Max': '0 minutes'}]
+        self.assertEquals(data, expected)
+
+
+class TestGroundStopsMethod(unittest.TestCase):
+
+    def setUp(self):
+        api.xml2dict = Mock(return_value=DELAYS)
+        faa.urlopen = Mock()
+
+    def test_default_ground_stops_method(self):
+        data = FAA().ground_stops()
+        expected = [
+            {'ARPT': 'ATL',
+             'Reason': 'WEATHER / THUNDERSTORMS',
+             'End_Time': '4:00 pm EDT.'},
+            {'ARPT': 'JFK',
+             'Reason': 'WEATHER / THUNDERSTORMS',
+             'End_Time': '4:30 pm EDT.'}]
+        self.assertEquals(data, expected)
+
+
+class TestDelayListMethod(unittest.TestCase):
+
+    def setUp(self):
+        api.xml2dict = Mock(return_value=DELAYS)
+        faa.urlopen = Mock()
+
+    def test_default_delay_list_method(self):
+        data = FAA().delay_list()
+        expected_count = 6
+        self.assertEquals(len(data), expected_count)
 
 
 if __name__ == '__main__':
