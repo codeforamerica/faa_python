@@ -29,7 +29,8 @@ class FAA(API):
         status_url = 'http://www.fly.faa.gov/flyfaa/xmlAirportStatus.jsp'
         xml_data = urlopen(status_url).read()
         if output_format:
-            data = self._xml_to_dict(xml_data)
+            xml_dict = self._xml_to_dict(xml_data)
+            data = xml_dict['AIRPORT_STATUS_INFORMATION']
         else:
             data = xml_data
         return data

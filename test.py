@@ -9,11 +9,13 @@ from mock import Mock
 from faa.api import api
 from faa import faa, FAA
 
+from test_delays_data import DELAYS
+
 
 class TestDelaysMethod(unittest.TestCase):
 
     def setUp(self):
-        api.xml2dict = Mock()
+        api.xml2dict = Mock(return_value=DELAYS)
         faa.urlopen = Mock()
 
     def test_default_delays_method(self):
