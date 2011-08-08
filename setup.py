@@ -76,7 +76,7 @@ See LICENSE for details.
 """
 
 setup(name="faa",
-      version="1.0",
+      version="1.1",
       description="Python wrapper for the FAA flight APIs.",
       long_description=long_description,
       keywords="FAA, faa, flight api, faa api",
@@ -84,7 +84,7 @@ setup(name="faa",
       author_email="zach@codeforamerica.org",
       url="https://github.com/codeforamerica/faa_python",
       license="BSD",
-      packages=["faa"],
+      packages=['faa', 'faa.api', 'faa.api.xml2dict'],
       classifiers=['Development Status :: 5 - Production/Stable',
                    'Intended Audience :: Developers',
                    'Natural Language :: English',
